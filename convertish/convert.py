@@ -194,7 +194,7 @@ def _parse_date(value):
         raise ConvertError('Invalid date')
     try:
         value = date(y, m, d)
-    except ValueError, e:
+    except ValueError as e:
         raise ConvertError('Invalid date: '+str(e))
     return value
 
@@ -236,7 +236,7 @@ def _parse_time(value):
     
     try:
         value = time(h, m, s, ms, tz)
-    except ValueError, e:
+    except ValueError as e:
         raise ConvertError('Invalid time: '+str(e))
         
     return value
@@ -258,7 +258,7 @@ class DateToDateTupleConverter(Converter):
             except ValueError:
                 raise ConvertError('Invalid Number')
             value = date(*V)
-        except (TypeError, ValueError), e:
+        except (TypeError, ValueError) as e:
             raise ConvertError('Invalid date: '+str(e))
         return value
 
@@ -536,7 +536,7 @@ class DateToJSONConverter(Converter):
             except ValueError:
                 raise ConvertError('Invalid Number')
             value = date(year, month, day)
-        except (TypeError, ValueError), e:
+        except (TypeError, ValueError) as e:
             raise ConvertError('Invalid date: '+str(e))
         return value
 
@@ -557,7 +557,7 @@ class TimeToJSONConverter(Converter):
             except ValueError:
                 raise ConvertError('Invalid Number')
             value = time(h, m, s, ms)
-        except (TypeError, ValueError), e:
+        except (TypeError, ValueError) as e:
             raise ConvertError('Invalid time: '+str(e))
         return value
 
