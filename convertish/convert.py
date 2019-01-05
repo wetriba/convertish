@@ -2,7 +2,8 @@ __all__ = ['string_converter', 'datetuple_converter', 'boolean_converter',
            'file_converter','json_converter']
 
 import csv
-from io import BytesIO
+import sys
+from io import BytesIO, StringIO
 from datetime import date, datetime, time
 from simplegeneric import generic
 import schemaish
@@ -272,19 +273,28 @@ def getDialect(delimiter=','):
 
 
 def convert_csvrow_to_list(row, delimiter=','):
-    sf = BytesIO()
-    sf.write(row.encode('utf-8'))
+    if sys.version_info.major == 2:
+        sf = BytesIO()
+    else:
+        sf = StringIO()
+    sf.write(row)
     sf.seek(0,0)
     reader = csv.reader(sf, dialect=getDialect(delimiter=delimiter))
     return list(_decode_row(reader.next()))
 
     
 def convert_list_to_csvrow(l, delimiter=','):
-    sf = BytesIO()
+    if sys.version_info.major == 2:
+        sf = BytesIO()
+    else:
+        sf = StringIO()
     writer = csv.writer(sf, dialect=getDialect(delimiter=delimiter))
     writer.writerow(list(_encode_row(l)))
     sf.seek(0,0)
-    return sf.read().strip().decode('utf-8')
+    result = sf.read().strip()
+    if isinstance(sf, BytesIO):
+        result = result.decode('utf-8')
+    return result
 
 
 def _encode_row(row, encoding='utf-8'):
